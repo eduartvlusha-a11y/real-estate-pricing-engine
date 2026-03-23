@@ -169,9 +169,34 @@ const psychologyLabel = (() => {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900">
-            Property Market Position Analysis
-          </h1>
+          <h1 className="text-3xl font-bold">
+  Mandate Intelligence – Pricing Engine
+</h1>
+
+<p className="text-gray-600 mt-2">
+  Win more listings with data-backed pricing decisions.
+</p>
+
+<div className="mt-4 flex gap-4 text-sm text-gray-700">
+
+  <div className="bg-white border px-4 py-2 rounded-lg">
+    📈 Justify pricing with data
+  </div>
+
+  <div className="bg-white border px-4 py-2 rounded-lg">
+    🤝 Win seller trust instantly
+  </div>
+
+  <div className="bg-white border px-4 py-2 rounded-lg">
+    ⚡ Reduce overpricing risk
+  </div>
+
+</div>
+
+<p className="text-xs text-gray-500 mt-3">
+  Built for real estate brokers to structure pricing conversations and increase mandate conversion.
+</p>
+
           <div className="mt-4 px-4 py-3 rounded-lg bg-blue-50 border border-blue-200">
 
   <p className="text-sm font-semibold text-blue-800">
@@ -821,105 +846,104 @@ const psychologyLabel = (() => {
           </div>
         )}
 
-        {/* PDF */}
-        <div className="mt-12 text-center">
-          <button
-            onClick={async () => {
-              const response = await fetch("/api/report", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  emv,
-                  seller,
-                  marketTemp: "neutral",
-                  competition: "medium",
-                  absorption: "normal",
-                  rateClimate: "stable",
-                  microDemand: "medium",
-                  urgency: "medium",
-                  brokerName,
-                  sellerReport
-                })
-              });
+        {/* ACTION BUTTONS */}
+<div className="mt-12 flex justify-between items-center">
 
-              const blob = await response.blob();
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = "Mandate_Report.pdf";
-              a.click();
-            }}
-            className="px-8 py-4 bg-black text-white rounded-xl text-lg font-semibold hover:bg-gray-800 transition"
-          >
-            Generate Executive Report (PDF)
-          </button>
-        </div>
+  {/* SAVE (LEFT) */}
+  <button
+    onClick={async () => {
+      try {
+        console.log("SENDING DATA...");
 
-        <button
-  onClick={async () => {
-    try {
-      console.log("SENDING DATA...");
+        const payload = {
+          property: {
+            emv,
+            sellerAskingPrice: seller,
+            deviation: result.deviation,
+            marketHeat: result.marketHeat
+          },
 
-      const payload = {
-        property: {
-          emv,
-          sellerAskingPrice: seller,
-          deviation: result.deviation,
-          marketHeat: result.marketHeat
-        },
+          decision: {
+            recommendedPath: mandateDecision.recommendedPath,
+            sellerPath: mandateDecision.sellerPath,
+            strategicPath: mandateDecision.strategicPath
+          },
 
-        decision: {
-          recommendedPath: mandateDecision.recommendedPath,
-          sellerPath: mandateDecision.sellerPath,
-          strategicPath: mandateDecision.strategicPath
-        },
+          risk: {
+            correctionProbability: mandateDecision.correctionProbability,
+            valueErosion: mandateDecision.valueErosion
+          },
 
-        risk: {
-          correctionProbability: mandateDecision.correctionProbability,
-          valueErosion: mandateDecision.valueErosion
-        },
+          seller: {
+            psychology: mandateDecision.sellerPsychology
+          },
 
-        seller: {
-          psychology: mandateDecision.sellerPsychology
-        },
+          timeline: mandateDecision.timeline,
 
-        timeline: mandateDecision.timeline,
+          broker: {
+            strategy: result.strategy,
+            summary: result.executiveSummary,
+            brokerageName: brokerName
+          }
+        };
 
-        broker: {
-          strategy: result.strategy,
-          summary: result.executiveSummary,
-          brokerageName: brokerName
-        }
-      };
+        const res = await fetch("/api/mandate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
 
-      console.log("PAYLOAD:", payload);
+        await res.json();
 
-      const res = await fetch("/api/mandate", {
+        alert("Mandate saved ✅");
+
+      } catch (err) {
+        console.error("SAVE ERROR:", err);
+        alert("Error saving mandate ❌");
+      }
+    }}
+    className="px-8 py-4 bg-green-600 text-white rounded-xl text-lg font-semibold hover:bg-green-700 transition"
+  >
+    Save Mandate Decision
+  </button>
+
+  {/* GENERATE (RIGHT) */}
+  <button
+    onClick={async () => {
+      const response = await fetch("/api/report", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          emv,
+          seller,
+          marketTemp: "neutral",
+          competition: "medium",
+          absorption: "normal",
+          rateClimate: "stable",
+          microDemand: "medium",
+          urgency: "medium",
+          brokerName,
+          sellerReport
+        })
       });
 
-      const data = await res.json();
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Mandate_Report.pdf";
+      a.click();
+    }}
+    className="px-8 py-4 bg-black text-white rounded-xl text-lg font-semibold hover:bg-gray-800 transition"
+  >
+    Generate Client-Ready Pricing Report
+  </button>
 
-      console.log("SAVE RESPONSE:", data);
-
-      alert("Mandate saved ✅");
-
-    } catch (err) {
-      console.error("SAVE ERROR:", err);
-      alert("Error saving mandate ❌");
-    }
-  }}
-  className="mt-4 px-8 py-4 bg-green-600 text-white rounded-xl text-lg font-semibold hover:bg-green-700 transition"
->
-  Save Mandate Decision
-</button>
-
+</div>
         {/* Brokerage Name */}
         <div className="mb-6 mt-8">
           <label className="text-sm text-gray-500">
