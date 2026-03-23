@@ -327,11 +327,10 @@ export function runEngine(input: EngineInput) {
   input = normalized;
 
   // --- MARKET SCORING ---
-  const tempScore = score(input.marketTemp, { hot: 100, neutral: 60, slow: 20 });
-  const compScore = score(input.competition, { low: 100, medium: 60, high: 20 });
-  const absScore = score(input.absorption, { fast: 100, normal: 60, slow: 20 });
-  const rateScore = score(input.rateClimate, { falling: 100, stable: 60, rising: 20 });
-  const microScore = score(input.microDemand, { high: 100, medium: 60, low: 20 });
+  const tempScore = score(input.marketTemp ?? "neutral", { hot: 100, neutral: 60, slow: 20 });
+const compScore = score(input.competition ?? "medium", { low: 100, medium: 60, high: 20 });
+const absScore = score(input.absorption ?? "normal", { fast: 100, normal: 60, slow: 20 });
+const rateScore = score(input.rateClimate ?? "stable", { falling: 100, stable: 60, rising: 20 });
 
   const msi = computeMarketHeatComposite(input);
 const roundedMSI = msi;
