@@ -60,13 +60,13 @@ export default function Home() {
 
  const marketHeat = result.marketHeat;
 
+const safeMarketHeat = marketHeat ?? 0;
+
 const marketLabel =
-  marketHeat >= 80
+  safeMarketHeat >= 80
     ? "Hot Market"
-    : marketHeat >= 60
+    : safeMarketHeat >= 60
     ? "Balanced Market"
-    : marketHeat >= 40
-    ? "Cooling Market"
     : "Cold Market";
 
 const bannerText = (() => {
@@ -92,13 +92,13 @@ const psychologyLabel = (() => {
   }
 
   if (sellerPsychology === "emotional_anchor") {
-    return result.marketHeat >= 60
+    return (result.marketHeat ?? 0) >= 60
       ? "Seller is anchored to a personal reference point, but current demand may temporarily support this positioning."
       : "Seller is anchored to a personal reference point, which is limiting buyer engagement and will likely delay serious offers.";
   }
 
   if (sellerPsychology === "overconfidence") {
-    return result.marketHeat >= 60
+    return (result.marketHeat ?? 0) >= 60
       ? "Seller is testing the upper boundary of the market, which may hold briefly under current conditions."
       : "Seller is overestimating market tolerance, increasing resistance and weakening negotiation leverage.";
   }
@@ -108,7 +108,7 @@ const psychologyLabel = (() => {
   }
 
   if (sellerPsychology === "market_denial") {
-    return result.marketHeat >= 60
+    return (result.marketHeat ?? 0) >= 60
       ? "Seller expectations are stretched but partially supported by current market momentum."
       : "Seller expectations are not aligned with current market reality, leading to low traction and extended time on market.";
   }
