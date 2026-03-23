@@ -59,19 +59,19 @@ drawText("Pricing Position", 16, true);
 y -= 5;
 
 drawText(
-  `Estimated Market Value: €${result.sellerReport.pricingPosition.emv.toLocaleString()}`
+  `Estimated Market Value: €${result.sellerReport?.pricingPosition?.emv?.toLocaleString() ?? "0"}`
 );
 
 drawText(
-  `Seller Asking Price: €${result.sellerReport.pricingPosition.askingPrice.toLocaleString()}`
+  `Seller Asking Price: €${result.sellerReport?.pricingPosition?.askingPrice?.toLocaleString() ?? "0"}`
 );
 
 drawText(
-  `Positioning Gap: +${result.sellerReport.pricingPosition.deviationPercent}%`
+  `Positioning Gap: +${result.sellerReport?.pricingPosition?.deviationPercent ?? 0}%`
 );
 
 drawText(
-  `Positioning Class: ${result.sellerReport.pricingPosition.positioningClass}`
+  `Positioning Class: ${result.sellerReport?.pricingPosition?.positioningClass ?? "N/A"}`
 );
 
 y -= 20;
@@ -276,10 +276,10 @@ y -= 30;
 
   const pdfBytes = await pdfDoc.save();
 
-  return new Response(pdfBytes, {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=Mandate_Report.pdf"
-    }
-  });
+  return new Response(pdfBytes as Uint8Array, {
+  headers: {
+    "Content-Type": "application/pdf",
+    "Content-Disposition": "attachment; filename=Mandate_Report.pdf"
+  }
+});
 }
