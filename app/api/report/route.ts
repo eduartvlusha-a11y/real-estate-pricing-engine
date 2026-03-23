@@ -276,7 +276,7 @@ y -= 30;
 
   const pdfBytes = await pdfDoc.save();
 
-  return new Response(pdfBytes as Uint8Array, {
+  return new Response(Buffer.from(pdfBytes), {
   headers: {
     "Content-Type": "application/pdf",
     "Content-Disposition": "attachment; filename=Mandate_Report.pdf"
